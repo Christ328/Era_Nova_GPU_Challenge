@@ -34,12 +34,14 @@ class ScoringService:
         score = int(round(proba * 100))
         score = max(0, min(100, score))
 
+        alerts, adjustments = rules_service.evaluate(features, score, 0.5)
+
+        score = self._apply_score_caps(score, features, adjustments)
+
         risk_level = self._get_risk_level(score)
         confidence_val = self._get_confidence(features, score)
         confidence_level = self._get_confidence_level(confidence_val)
         data_quality = self._get_data_quality(features)
-
-        alerts, adjustments = rules_service.evaluate(features, score, confidence_val)
 
         product_type, amount_min, amount_max, duration = self._recommend(
             score, risk_level, adjustments, features
@@ -144,3 +146,26 @@ class ScoringService:
                 f"Le facteur principal ({top['label']}) {direction} le score estimé.")
 
 scoring_service = ScoringService()
+
+    def _apply_score_caps(self, score: int, features: Dict, adjustments: Dict) -> int:
+        revenu = features.get("revenu_mensuel_declare", 0)
+        montant = features.get("montant_demande", 0)
+
+        if revenu > 0 and montant > 0:
+            ratio = montant / revenu
+            if ratio > 50:
+                score = min(score, 10)
+            elif ratio > 20:
+                score = min(score, 20)
+            elif ratio > 10:
+                score = min(score, 30)
+            elif ratio > 5:
+                score = min(score, 45)
+
+        if adjustments.get("no_auto_recommendation"):
+            score = min(score, 25)
+
+        if adjustments.get("require_human_review") and score > 50:
+            score = 50
+
+        return max(0, min(100, score))
