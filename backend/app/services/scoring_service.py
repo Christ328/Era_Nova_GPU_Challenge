@@ -37,7 +37,7 @@ class ScoringService:
         risk_level = self._get_risk_level(score)
         confidence_val = self._get_confidence(features, score)
         confidence_level = self._get_confidence_level(confidence_val)
-        data_quality = float(features.get("data_completeness", 1.0))
+        data_quality = self._get_data_quality(features)
 
         alerts, adjustments = rules_service.evaluate(features, score, confidence_val)
 
@@ -75,18 +75,32 @@ class ScoringService:
         return RiskLevel.MODERATE
 
     def _get_confidence(self, features: Dict, score: int) -> float:
-        completeness = features.get("data_completeness", 1.0)
-        n_months = features.get("n_months_active", 0)
-        has_inconsistencies = features.get("has_inconsistencies", False)
+        anciennete = features.get("anciennete_activite_mois", 0)
+        nb_tx = features.get("nb_transactions_mois", 0)
+        integrite = features.get("score_integrite", 0.5)
 
-        conf = completeness * 0.5
-        conf += min(n_months / 12, 1.0) * 0.3
-        if has_inconsistencies:
-            conf *= 0.5
+        conf = min(anciennete / 24, 1.0) * 0.3
+        conf += min(nb_tx / 50, 1.0) * 0.2
+        conf += integrite * 0.3
+
+        if features.get("premiere_fois", 0):
+            conf *= 0.7
         if score < 20 or score > 95:
             conf *= 0.8
 
         return float(max(0, min(1, conf)))
+
+    def _get_data_quality(self, features: Dict) -> float:
+        quality = 1.0
+        if features.get("premiere_fois", 0):
+            quality -= 0.2
+        if features.get("anciennete_activite_mois", 0) < 6:
+            quality -= 0.3
+        if features.get("nb_transactions_mois", 0) < 10:
+            quality -= 0.2
+        if features.get("score_integrite", 0.5) < 0.3:
+            quality -= 0.2
+        return float(max(0, min(1, quality)))
 
     def _get_confidence_level(self, val: float) -> ConfidenceLevel:
         pct = val * 100
@@ -102,8 +116,6 @@ class ScoringService:
 
         if score >= 75:
             pt = "growth_microloan"
-        elif score >= 60:
-            pt = "standard_microloan"
         elif score >= 45:
             pt = "standard_microloan"
         else:

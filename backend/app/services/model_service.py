@@ -27,9 +27,13 @@ class ModelService:
             return
 
         if settings.MODEL_PATH.exists():
-            self._model = xgb.XGBClassifier()
-            self._model.load_model(str(settings.MODEL_PATH))
-            logger.info("XGBoost model loaded")
+            try:
+                self._model = xgb.XGBClassifier()
+                self._model.load_model(str(settings.MODEL_PATH))
+                logger.info("XGBoost model loaded")
+            except Exception as e:
+                logger.warning(f"Could not load model: {e}")
+                self._model = None
         else:
             logger.warning("Model file not found, using mock predictions")
             self._model = None
@@ -58,14 +62,39 @@ class ModelService:
 
     def _mock_predict(self, features: Dict[str, Any]) -> float:
         score = 0.5
-        if features.get("margin_ratio", 0) > 0.2:
-            score += 0.2
-        if features.get("regularity_score", 0) > 0.5:
+
+        revenu = features.get("revenu_mensuel_declare", 0)
+        depenses = features.get("depenses_mensuelles", 1)
+        if revenu > 0 and depenses > 0:
+            ratio = depenses / revenu
+            if ratio < 0.5:
+                score += 0.2
+            elif ratio < 0.7:
+                score += 0.1
+            else:
+                score -= 0.2
+
+        anciennete = features.get("anciennete_activite_mois", 0)
+        if anciennete >= 24:
             score += 0.15
-        if features.get("data_completeness", 1) < 0.5:
-            score -= 0.2
-        if features.get("has_inconsistencies", False):
+        elif anciennete < 6:
             score -= 0.15
+
+        solde = features.get("solde_moyen_compte", 0)
+        if solde > revenu * 0.5:
+            score += 0.1
+
+        if features.get("premiere_fois", 0):
+            score -= 0.05
+
+        if features.get("nb_transactions_echouees", 0) > 5:
+            score -= 0.1
+
+        if features.get("score_integrite", 0.5) > 0.7:
+            score += 0.1
+        elif features.get("score_integrite", 0.5) < 0.3:
+            score -= 0.1
+
         return float(np.clip(score, 0, 1))
 
     def get_feature_names(self) -> list:

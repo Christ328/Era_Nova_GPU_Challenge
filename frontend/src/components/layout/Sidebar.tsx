@@ -4,6 +4,7 @@ import { LayoutDashboard, Users, CreditCard, Cpu } from 'lucide-react'
 const links = [
   { to: '/', label: 'Tableau de bord', icon: LayoutDashboard, end: true },
   { to: '/merchants', label: 'Commerçants', icon: Users, end: false },
+  { to: '/custom', label: 'Évaluation manuelle', icon: CreditCard, end: false },
   { to: '/benchmark', label: 'Benchmark GPU', icon: Cpu, end: false },
 ]
 

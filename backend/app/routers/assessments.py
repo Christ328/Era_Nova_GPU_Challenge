@@ -14,14 +14,14 @@ def create_assessment(merchant_id: str):
         raise HTTPException(status_code=404, detail="Demo profiles not found")
 
     df = pd.read_csv(settings.DEMO_PROFILES_PATH)
-    match = df[df["merchant_id"] == merchant_id]
+    match = df[df["id_commercant"] == merchant_id]
     if len(match) == 0:
         raise HTTPException(status_code=404, detail=f"Merchant {merchant_id} not found")
 
     row = match.iloc[0]
     features = {}
     for col in df.columns:
-        if col == "merchant_id":
+        if col == "id_commercant":
             continue
         val = row[col]
         if pd.isna(val):
@@ -37,6 +37,26 @@ def create_assessment(merchant_id: str):
 
     return AssessmentResponse(
         merchant_id=merchant_id,
+        score=result["score"],
+        risk_level=result["risk_level"],
+        confidence=result["confidence"],
+        data_quality=result["data_quality"],
+        recommended_amount_min=result["recommended_amount_min"],
+        recommended_amount_max=result["recommended_amount_max"],
+        recommended_duration_months=result["recommended_duration_months"],
+        product_type=result["product_type"],
+        human_review_required=result["human_review_required"],
+        top_factors=result["top_factors"],
+        alerts=result["alerts"],
+        explanation=result["explanation"],
+    )
+
+@router.post("/assessments/score", response_model=AssessmentResponse)
+def score_custom(features: dict):
+    result = scoring_service.score(features)
+
+    return AssessmentResponse(
+        merchant_id=features.get("id_commercant", "CUSTOM"),
         score=result["score"],
         risk_level=result["risk_level"],
         confidence=result["confidence"],

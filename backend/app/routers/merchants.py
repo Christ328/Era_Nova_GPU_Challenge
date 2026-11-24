@@ -18,9 +18,9 @@ def list_merchants(
     df = pd.read_csv(settings.DEMO_PROFILES_PATH)
 
     if search:
-        mask = df["merchant_id"].str.contains(search, case=False, na=False)
-        if "activity" in df.columns:
-            mask = mask | df["activity"].str.contains(search, case=False, na=False)
+        mask = df["id_commercant"].str.contains(search, case=False, na=False)
+        if "secteur_activite" in df.columns:
+            mask = mask | df["secteur_activite"].str.contains(search, case=False, na=False)
         df = df[mask]
 
     total = len(df)
@@ -30,12 +30,12 @@ def list_merchants(
     merchants = []
     for _, row in page_df.iterrows():
         merchants.append(MerchantSummary(
-            merchant_id=str(row.get("merchant_id", "")),
-            activity=str(row.get("activity", "")) if pd.notna(row.get("activity")) else None,
-            zone=str(row.get("zone", "")) if pd.notna(row.get("zone")) else None,
-            is_first_time_borrower=bool(row.get("is_first_time_borrower", False)) if pd.notna(row.get("is_first_time_borrower")) else None,
-            activity_age_months=int(row.get("activity_age_months", 0)) if pd.notna(row.get("activity_age_months")) else None,
-            data_completeness=float(row.get("data_completeness", 0)) if pd.notna(row.get("data_completeness")) else None,
+            merchant_id=str(row.get("id_commercant", "")),
+            activity=str(row.get("secteur_activite", "")) if pd.notna(row.get("secteur_activite")) else None,
+            zone=str(row.get("departement", "")) if pd.notna(row.get("departement")) else None,
+            is_first_time_borrower=bool(row.get("premiere_fois", 0)) if pd.notna(row.get("premiere_fois")) else None,
+            activity_age_months=int(row.get("anciennete_activite_mois", 0)) if pd.notna(row.get("anciennete_activite_mois")) else None,
+            data_completeness=float(row.get("score_integrite", 0)) if pd.notna(row.get("score_integrite")) else None,
         ))
 
     return MerchantListResponse(merchants=merchants, total=total, page=page, page_size=page_size)
@@ -46,7 +46,7 @@ def get_merchant(merchant_id: str):
         return {"error": "Merchant not found"}
 
     df = pd.read_csv(settings.DEMO_PROFILES_PATH)
-    match = df[df["merchant_id"] == merchant_id]
+    match = df[df["id_commercant"] == merchant_id]
     if len(match) == 0:
         return {"error": "Merchant not found"}
 

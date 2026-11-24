@@ -1,7 +1,10 @@
 {
   "version": "1.0.0",
   "training_date": "2026-11-24",
-  "n_features": 25,
+  "n_features": 35,
+  "dataset_size": 700000,
+  "target": "defaut_paiement",
+  "target_distribution": {"0": 0.65013, "1": 0.34987},
   "xgboost_version": "3.4.1",
   "train_auc": 0.9134,
   "test_auc": 0.8721,
