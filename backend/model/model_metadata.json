@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0",
+  "training_date": "2026-11-24",
+  "n_features": 25,
+  "xgboost_version": "3.4.1",
+  "train_auc": 0.9134,
+  "test_auc": 0.8721,
+  "params": {
+    "n_estimators": 300,
+    "max_depth": 6,
+    "learning_rate": 0.05,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "tree_method": "hist",
+    "device": "cuda",
+    "objective": "binary:logistic",
+    "eval_metric": "auc"
+  },
+  "gpu_trained": true,
+  "benchmark": {
+    "dataset_size": 700000,
+    "cpu_time": 89.3,
+    "gpu_time": 12.5,
+    "speedup": 7.1,
+    "cpu_auc": 0.8698,
+    "gpu_auc": 0.8721,
+    "gpu_type": "NVIDIA Tesla T4",
+    "xgboost_version": "3.4.1"
+  }
+}

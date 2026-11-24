@@ -1,0 +1,7 @@
+{
+  "version": "1.0.0",
+  "n_features": 25,
+  "train_auc": 0.9134,
+  "test_auc": 0.8721,
+  "gpu_trained": true
+}

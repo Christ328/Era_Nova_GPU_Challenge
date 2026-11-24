@@ -1,0 +1,11 @@
+{
+  "dataset_size": 700000,
+  "n_features": 25,
+  "cpu_time": 89.3,
+  "gpu_time": 12.5,
+  "speedup": 7.1,
+  "cpu_auc": 0.8698,
+  "gpu_auc": 0.8721,
+  "gpu_type": "NVIDIA Tesla T4",
+  "xgboost_version": "3.4.1"
+}

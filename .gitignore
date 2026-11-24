@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+.env
+*.log
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# Data (large files - not in git)
+*.csv
+!backend/data/demo_profiles.csv
+
+# Database
+*.db
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Streamlit (legacy)
+.streamlit/
+.vercel
