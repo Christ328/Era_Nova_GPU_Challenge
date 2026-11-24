@@ -146,10 +146,28 @@ class ModelService:
         montant_demande = features.get("montant_demande", 0)
         if revenu > 0:
             loan_ratio = montant_demande / revenu
-            if loan_ratio > 5:
-                score -= 0.15
+            if loan_ratio > 10:
+                score -= 0.3
+            elif loan_ratio > 5:
+                score -= 0.2
+            elif loan_ratio > 3:
+                score -= 0.1
+            elif loan_ratio < 1:
+                score += 0.1
             elif loan_ratio < 2:
                 score += 0.05
+
+        duree = features.get("duree_credit_mois", 6)
+        if duree > 18:
+            score -= 0.1
+        elif duree > 12:
+            score -= 0.05
+
+        garantie = features.get("garantie", 0)
+        if garantie > 0.5:
+            score += 0.1
+        elif garantie < 0.1:
+            score -= 0.1
 
         score += np.random.normal(0, 0.03)
         return float(np.clip(score, 0.02, 0.98))
