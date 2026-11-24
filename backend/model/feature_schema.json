@@ -1,5 +1,5 @@
 {
-  "n_features": 57,
+  "n_features": 58,
   "target": "defaut_paiement",
   "id_column": "id_commercant",
   "categorical_features": [
@@ -14,6 +14,11 @@
       "name": "age",
       "type": "float",
       "description": "age"
+    },
+    {
+      "name": "nb_enfants",
+      "type": "float",
+      "description": "nb_enfants"
     },
     {
       "name": "anciennete_activite_mois",
