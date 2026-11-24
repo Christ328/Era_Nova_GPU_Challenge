@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { api } from '../api/client'
+import { scoreCustom } from '../api/assessments'
 import type { Assessment } from '../types/assessment'
 import ScoreCard from '../components/scoring/ScoreCard'
 import RiskBadge from '../components/scoring/RiskBadge'
@@ -95,8 +95,8 @@ export default function CustomScorePage() {
   const handleScore = async () => {
     setLoading(true)
     try {
-      const { data } = await api.post('/assessments/score', features)
-      setAssessment(data)
+      const result = await scoreCustom(features)
+      setAssessment(result)
     } catch (e) {
       console.error(e)
     } finally {

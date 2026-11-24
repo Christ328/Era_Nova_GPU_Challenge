@@ -6,6 +6,11 @@ export async function createAssessment(merchantId: string): Promise<Assessment> 
   return data
 }
 
+export async function scoreCustom(features: Record<string, number>): Promise<Assessment> {
+  const { data } = await api.post('/assessments/score', features)
+  return data
+}
+
 export async function submitDecision(
   assessmentId: string,
   decision: string,

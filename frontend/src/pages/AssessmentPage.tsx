@@ -15,11 +15,14 @@ export default function AssessmentPage() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    if (id) {
+    if (id && id !== 'undefined') {
       createAssessment(id)
         .then(setAssessment)
-        .catch(e => setError(e.message))
+        .catch(e => setError(e.message || 'Erreur lors de l\'évaluation'))
         .finally(() => setLoading(false))
+    } else {
+      setError('ID commerçant manquant')
+      setLoading(false)
     }
   }, [id])
 
