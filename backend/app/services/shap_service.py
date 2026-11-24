@@ -1,7 +1,5 @@
 import logging
 from typing import Dict, Any, List
-import shap
-import xgboost as xgb
 import pandas as pd
 import numpy as np
 
@@ -49,23 +47,15 @@ FEATURE_LABELS = {
 }
 
 class ShapService:
-    _explainer = None
-
-    @classmethod
-    def get_explainer(cls):
-        if cls._explainer is None:
-            model_service.load()
-            model = model_service._model
-            if model is not None:
-                try:
-                    cls._explainer = shap.TreeExplainer(model)
-                except Exception:
-                    cls._explainer = None
-            else:
-                cls._explainer = None
-        return cls._explainer
 
     def explain(self, features: Dict[str, Any]) -> List[Dict]:
+        try:
+            return self._compute_shap(features)
+        except Exception as e:
+            logger.warning(f"SHAP error: {e}")
+            return self._mock_explain(features)
+
+    def _compute_shap(self, features: Dict[str, Any]) -> List[Dict]:
         model_service.load()
         feature_order = model_service.get_feature_names()
 
@@ -74,11 +64,13 @@ class ShapService:
 
         X = pd.DataFrame([features])[feature_order].fillna(0)
 
-        explainer = self.get_explainer()
-        if explainer is None:
+        model = model_service._model
+        if model is None:
             return self._mock_explain(features)
 
         try:
+            import shap
+            explainer = shap.TreeExplainer(model)
             shap_values = explainer.shap_values(X)
             if isinstance(shap_values, list):
                 shap_values = shap_values[1]
@@ -88,6 +80,8 @@ class ShapService:
 
         factors = []
         for i, fname in enumerate(feature_order):
+            if i >= len(shap_values):
+                break
             val = shap_values[i]
             factors.append({
                 "feature": fname,
