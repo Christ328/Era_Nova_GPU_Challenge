@@ -4,11 +4,20 @@ import plotly.graph_objects as go
 import plotly.express as px
 from streamlit_option_menu import option_menu
 import json
+import os
 
 from app.config import config
 from app.database import data_manager
 from src.scoring import scoring_engine, ScoringResult
 from src.rules_engine import RuleResult
+
+# Generate data on first run if missing (for Streamlit Cloud deployment)
+if not config.MERCHANTS_CSV.exists() or not config.FEATURES_CSV.exists():
+    try:
+        from src.generate_synthetic_data import save_all_data
+        save_all_data()
+    except Exception as e:
+        st.warning(f"Data generation skipped: {e}")
 
 st.set_page_config(
     page_title="GPU Credit Scoring - Évaluation Risque Commerçants",
