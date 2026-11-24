@@ -5,6 +5,11 @@ import plotly.express as px
 from streamlit_option_menu import option_menu
 import json
 import os
+import sys
+from pathlib import Path
+
+# Fix imports for Streamlit Cloud (app/app.py is the entry point)
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from app.config import config
 from app.database import data_manager
