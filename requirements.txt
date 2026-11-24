@@ -22,5 +22,5 @@ python-dotenv==1.0.0
 
 # Development
 pytest==8.0.0
-black==24.0.0
+black==26.10.1
 ruff==0.3.0
