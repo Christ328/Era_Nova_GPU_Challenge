@@ -61,8 +61,30 @@ class ModelService:
             if col not in X.columns:
                 X[col] = 0
         X = X[self._feature_order].fillna(0)
+
+        X = self._normalize(X)
+
         proba = self._model.predict_proba(X)[0, 1]
         return float(proba)
+
+    def _normalize(self, X: pd.DataFrame) -> pd.DataFrame:
+        X = X.copy()
+        log_cols = ["revenu_mensuel_declare", "depenses_mensuelles", "solde_moyen_compte",
+                    "volume_depots_moyen", "volume_retraits_moyen", "montant_demande",
+                    "montant_moyen_recharge", "montant_moyen_cotisation"]
+        for col in log_cols:
+            if col in X.columns:
+                X[col] = np.log1p(X[col].clip(lower=0))
+
+        ratio_cols = ["tendance_solde_3m", "regularite_depots_ecart_type",
+                      "part_transferts_marchands", "stabilite_lieu_vie",
+                      "regularite_cotisations_tontine", "score_aptitude_entrepreneuriale",
+                      "score_integrite", "locus_controle_interne", "garantie"]
+        for col in ratio_cols:
+            if col in X.columns:
+                X[col] = X[col].clip(0, 1)
+
+        return X
 
     def _mock_predict(self, features: Dict[str, Any]) -> float:
         score = 0.5
