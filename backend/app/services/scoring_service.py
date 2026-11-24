@@ -93,6 +93,9 @@ class ScoringService:
         if requested <= 0:
             return (50000, 0, False)
 
+        best_score = initial_score
+        best_amount = 50000
+
         for amount in range(requested, 49999, -10000):
             if amount <= 0:
                 break
@@ -102,8 +105,12 @@ class ScoringService:
             score = max(0, min(100, score))
             if score >= SCORE_THRESHOLD:
                 return (amount, score, True)
+            if score > best_score:
+                best_score = score
+                best_amount = amount
 
-        return (50000, 0, True)
+        # No amount reached the threshold — return best found, never force score to 0
+        return (best_amount, best_score, True)
 
     def _apply_score_caps(self, score: int, features: Dict, adjustments: Dict) -> int:
         revenu = features.get("revenu_mensuel_declare", 0)
