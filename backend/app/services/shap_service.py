@@ -62,7 +62,11 @@ class ShapService:
         if not feature_order:
             return self._mock_explain(features)
 
-        X = pd.DataFrame([features])[feature_order].fillna(0)
+        X = pd.DataFrame([features])
+        for col in feature_order:
+            if col not in X.columns:
+                X[col] = 0
+        X = X[feature_order].fillna(0)
 
         model = model_service._model
         if model is None:

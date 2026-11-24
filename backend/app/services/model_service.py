@@ -56,7 +56,11 @@ class ModelService:
         if self._model is None or not self._feature_order:
             return self._mock_predict(features)
 
-        X = pd.DataFrame([features])[self._feature_order].fillna(0)
+        X = pd.DataFrame([features])
+        for col in self._feature_order:
+            if col not in X.columns:
+                X[col] = 0
+        X = X[self._feature_order].fillna(0)
         proba = self._model.predict_proba(X)[0, 1]
         return float(proba)
 
