@@ -1,23 +1,24 @@
 {
   "version": "1.0.0",
-  "n_features": 58,
+  "n_features": 57,
   "dataset_size": 700000,
   "target": "defaut_paiement",
   "target_distribution": {
-    "0": 0.6502857142857142,
-    "1": 0.3497142857142857
+    "0": 0.65013,
+    "1": 0.34987
   },
   "xgboost_version": "3.4.1",
-  "train_auc": 0.8113790258328304,
-  "test_auc": 0.7957456300406989,
+  "train_auc": 1.0,
+  "test_auc": 0.9999999995513928,
   "gpu_trained": true,
+  "normalization": "log1p on amounts, clip 0-1 on ratios",
   "benchmark": {
     "dataset_size": 700000,
-    "cpu_time": 17.2,
-    "gpu_time": 4.4,
-    "speedup": 3.9,
-    "cpu_auc": 0.7954,
-    "gpu_auc": 0.7957,
+    "cpu_time": 10.1,
+    "gpu_time": 3.2,
+    "speedup": 3.1,
+    "cpu_auc": 1.0,
+    "gpu_auc": 1.0,
     "gpu_type": "NVIDIA Tesla T4",
     "xgboost_version": "3.4.1"
   }

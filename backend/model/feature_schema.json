@@ -1,5 +1,5 @@
 {
-  "n_features": 58,
+  "n_features": 57,
   "target": "defaut_paiement",
   "id_column": "id_commercant",
   "categorical_features": [
@@ -9,16 +9,34 @@
     "departement",
     "secteur_activite"
   ],
+  "normalization": {
+    "log_cols": [
+      "revenu_mensuel_declare",
+      "depenses_mensuelles",
+      "solde_moyen_compte",
+      "volume_depots_moyen",
+      "volume_retraits_moyen",
+      "montant_demande",
+      "montant_moyen_recharge",
+      "montant_moyen_cotisation"
+    ],
+    "ratio_cols": [
+      "tendance_solde_3m",
+      "regularite_depots_ecart_type",
+      "part_transferts_marchands",
+      "stabilite_lieu_vie",
+      "regularite_cotisations_tontine",
+      "score_aptitude_entrepreneuriale",
+      "score_integrite",
+      "locus_controle_interne",
+      "garantie"
+    ]
+  },
   "features": [
     {
       "name": "age",
       "type": "float",
       "description": "age"
-    },
-    {
-      "name": "nb_enfants",
-      "type": "float",
-      "description": "nb_enfants"
     },
     {
       "name": "anciennete_activite_mois",
