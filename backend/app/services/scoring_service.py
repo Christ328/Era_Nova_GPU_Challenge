@@ -37,16 +37,16 @@ class ScoringService:
 
         if requested_amount > MAX_LOAN_AMOUNT:
             features = {**features, "montant_demande": MAX_LOAN_AMOUNT}
+            requested_amount = MAX_LOAN_AMOUNT
 
         proba = model_service.predict(features)
         score = int(round(proba * 100))
         score = max(0, min(100, score))
 
         alerts, adjustments = rules_service.evaluate(features, score, 0.5)
-
         score = self._apply_score_caps(score, features, adjustments)
 
-        amount, score, iterated = self._iterate_amount(features, score)
+        amount, score, iterated = self._iterate_amount(features, score, requested_amount)
 
         if iterated:
             alerts.append({
@@ -86,21 +86,14 @@ class ScoringService:
             "adjustments": adjustments,
         }
 
-    def _iterate_amount(self, features: Dict, initial_score: int) -> tuple:
-        requested = features.get("montant_demande", 0)
-
-        if requested <= MAX_LOAN_AMOUNT and initial_score >= SCORE_THRESHOLD:
+    def _iterate_amount(self, features: Dict, initial_score: int, requested: int) -> tuple:
+        if initial_score >= SCORE_THRESHOLD:
             return (requested, initial_score, False)
 
-        if requested > MAX_LOAN_AMOUNT:
-            features = {**features, "montant_demande": MAX_LOAN_AMOUNT}
-            proba = model_service.predict(features)
-            score = int(round(proba * 100))
-            score = max(0, min(100, score))
-            if score >= SCORE_THRESHOLD:
-                return (MAX_LOAN_AMOUNT, score, True)
+        if requested <= 0:
+            return (50000, 0, False)
 
-        for amount in range(int(requested) - 10000, 49999, -10000):
+        for amount in range(requested, 49999, -10000):
             if amount <= 0:
                 break
             test_features = {**features, "montant_demande": amount}
