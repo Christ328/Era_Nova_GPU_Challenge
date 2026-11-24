@@ -1,0 +1,33 @@
+{
+  "features": [
+    {"name": "monthly_income_mean", "type": "float", "description": "Revenu mensuel moyen déclaré"},
+    {"name": "monthly_income", "type": "float", "description": "Revenu mensuel calculé"},
+    {"name": "monthly_expenses", "type": "float", "description": "Dépenses mensuelles moyennes"},
+    {"name": "expense_income_ratio", "type": "float", "description": "Ratio dépenses / revenus"},
+    {"name": "margin_ratio", "type": "float", "description": "Marge nette"},
+    {"name": "avg_balance_income_ratio", "type": "float", "description": "Solde moyen / Revenu mensuel"},
+    {"name": "min_balance_income_ratio", "type": "float", "description": "Solde minimum / Revenu mensuel"},
+    {"name": "income_volatility", "type": "float", "description": "Volatilité des revenus"},
+    {"name": "income_growth", "type": "float", "description": "Croissance des revenus"},
+    {"name": "regularity_score", "type": "float", "description": "Score de régularité"},
+    {"name": "concentration_ratio", "type": "float", "description": "Concentration des revenus"},
+    {"name": "documentation_quality", "type": "float", "description": "Qualité de la documentation"},
+    {"name": "counterparty_diversity", "type": "int", "description": "Diversité des contreparties"},
+    {"name": "transactions_per_day", "type": "float", "description": "Transactions par jour actif"},
+    {"name": "total_transactions", "type": "int", "description": "Nombre total de transactions"},
+    {"name": "n_months_active", "type": "int", "description": "Mois d'activité"},
+    {"name": "n_active_days", "type": "int", "description": "Jours actifs"},
+    {"name": "n_counterparties", "type": "int", "description": "Contreparties uniques"},
+    {"name": "avg_balance", "type": "float", "description": "Solde moyen"},
+    {"name": "min_balance", "type": "float", "description": "Solde minimum"},
+    {"name": "max_balance", "type": "float", "description": "Solde maximum"},
+    {"name": "documented_ratio", "type": "float", "description": "Taux de documentation"},
+    {"name": "activity_age_months", "type": "int", "description": "Ancienneté activité"},
+    {"name": "is_first_time_borrower", "type": "int", "description": "Primo-emprunteur"},
+    {"name": "data_completeness", "type": "float", "description": "Complétude des données"},
+    {"name": "has_inconsistencies", "type": "int", "description": "Incohérences détectées"},
+    {"name": "expense_documentation_ratio", "type": "float", "description": "Ratio documentation dépenses"}
+  ],
+  "target": "repayment_label",
+  "id_column": "merchant_id"
+}

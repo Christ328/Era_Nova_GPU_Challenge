@@ -1,0 +1,4 @@
+merchant_id,activity,zone,is_first_time_borrower,activity_age_months,activity_size,monthly_income_mean,has_inconsistencies,data_completeness,expense_documentation_ratio
+MCH-DEMO-01,alimentation,zone_1,False,36,small,800000,False,0.95,0.85
+MCH-DEMO-02,restauration,zone_2,True,8,micro,150000,False,0.65,0.4
+MCH-DEMO-03,commerce_detail,zone_3,True,3,micro,90000,True,0.45,0.2
