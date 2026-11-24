@@ -53,7 +53,12 @@ def create_assessment(merchant_id: str):
 
 @router.post("/assessments/score", response_model=AssessmentResponse)
 def score_custom(features: dict):
-    result = scoring_service.score(features)
+    try:
+        result = scoring_service.score(features)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
 
     return AssessmentResponse(
         merchant_id=features.get("id_commercant", "CUSTOM"),
