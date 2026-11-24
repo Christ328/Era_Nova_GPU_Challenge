@@ -67,6 +67,7 @@ class ShapService:
             if col not in X.columns:
                 X[col] = 0
         X = X[feature_order].fillna(0)
+        X = model_service._normalize(X)  # normalize before SHAP, same as predict()
 
         model = model_service._model
         if model is None:

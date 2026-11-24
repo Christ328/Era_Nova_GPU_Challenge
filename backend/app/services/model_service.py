@@ -78,11 +78,17 @@ class ModelService:
 
         ratio_cols = ["tendance_solde_3m", "regularite_depots_ecart_type",
                       "part_transferts_marchands", "stabilite_lieu_vie",
-                      "regularite_cotisations_tontine", "score_aptitude_entrepreneuriale",
-                      "score_integrite", "locus_controle_interne", "garantie"]
+                      "regularite_cotisations_tontine",
+                      "score_integrite", "garantie"]
         for col in ratio_cols:
             if col in X.columns:
                 X[col] = X[col].clip(0, 1)
+
+        # Normalize non-ratio columns with known scales
+        if "score_aptitude_entrepreneuriale" in X.columns:
+            X["score_aptitude_entrepreneuriale"] = X["score_aptitude_entrepreneuriale"].clip(0, 100) / 100
+        if "locus_controle_interne" in X.columns:
+            X["locus_controle_interne"] = X["locus_controle_interne"].clip(0, 10) / 10
 
         return X
 

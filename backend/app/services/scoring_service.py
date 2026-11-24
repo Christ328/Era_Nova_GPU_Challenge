@@ -40,7 +40,7 @@ class ScoringService:
             requested_amount = MAX_LOAN_AMOUNT
 
         proba = model_service.predict(features)
-        score = int(round(proba * 100))
+        score = int(round((1 - proba) * 100))
         score = max(0, min(100, score))
 
         alerts, adjustments = rules_service.evaluate(features, score, 0.5)
@@ -98,7 +98,7 @@ class ScoringService:
                 break
             test_features = {**features, "montant_demande": amount}
             proba = model_service.predict(test_features)
-            score = int(round(proba * 100))
+            score = int(round((1 - proba) * 100))
             score = max(0, min(100, score))
             if score >= SCORE_THRESHOLD:
                 return (amount, score, True)
