@@ -97,8 +97,9 @@ export default function CustomScorePage() {
     try {
       const result = await scoreCustom(features)
       setAssessment(result)
-    } catch (e) {
-      console.error(e)
+    } catch (e: any) {
+      console.error('Score error:', e)
+      alert('Erreur: ' + (e.response?.data?.detail || e.message || 'API inaccessible'))
     } finally {
       setLoading(false)
     }
