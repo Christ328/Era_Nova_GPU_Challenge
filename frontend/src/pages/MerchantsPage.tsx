@@ -34,10 +34,10 @@ export default function MerchantsPage() {
             <thead>
               <tr className="border-b border-border">
                 <th className="text-left py-3 px-2 font-medium text-text-secondary">ID</th>
-                <th className="text-left py-3 px-2 font-medium text-text-secondary">Activité</th>
-                <th className="text-left py-3 px-2 font-medium text-text-secondary">Zone</th>
+                <th className="text-left py-3 px-2 font-medium text-text-secondary">Secteur</th>
+                <th className="text-left py-3 px-2 font-medium text-text-secondary">Département</th>
                 <th className="text-left py-3 px-2 font-medium text-text-secondary">Primo</th>
-                <th className="text-left py-3 px-2 font-medium text-text-secondary">Complétude</th>
+                <th className="text-left py-3 px-2 font-medium text-text-secondary">Ancienneté</th>
                 <th className="text-left py-3 px-2 font-medium text-text-secondary">Action</th>
               </tr>
             </thead>
@@ -48,7 +48,7 @@ export default function MerchantsPage() {
                   <td className="py-3 px-2">{m.activity ?? '-'}</td>
                   <td className="py-3 px-2">{m.zone ?? '-'}</td>
                   <td className="py-3 px-2">{m.is_first_time_borrower ? 'Oui' : 'Non'}</td>
-                  <td className="py-3 px-2">{m.data_completeness ? `${(m.data_completeness * 100).toFixed(0)}%` : '-'}</td>
+                  <td className="py-3 px-2">{m.activity_age_months ?? '-'} mois</td>
                   <td className="py-3 px-2">
                     <Link to={`/merchants/${m.merchant_id}`} className="text-primary hover:underline">
                       Voir

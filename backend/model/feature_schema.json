@@ -1,43 +1,299 @@
 {
-  "n_features": 35,
+  "n_features": 57,
   "target": "defaut_paiement",
   "id_column": "id_commercant",
-  "categorical_features": ["genre", "niveau_education", "situation_familiale", "departement", "secteur_activite"],
+  "categorical_features": [
+    "genre",
+    "niveau_education",
+    "situation_familiale",
+    "departement",
+    "secteur_activite"
+  ],
   "features": [
-    {"name": "age", "type": "int", "description": "Âge du commerçant"},
-    {"name": "anciennete_activite_mois", "type": "int", "description": "Ancienneté de l'activité en mois"},
-    {"name": "revenu_mensuel_declare", "type": "float", "description": "Revenu mensuel déclaré"},
-    {"name": "depenses_mensuelles", "type": "float", "description": "Dépenses mensuelles"},
-    {"name": "proprietaire_local", "type": "int", "description": "Propriétaire du local (0/1)"},
-    {"name": "nombre_employes", "type": "int", "description": "Nombre d'employés"},
-    {"name": "nb_transactions_mois", "type": "int", "description": "Nombre de transactions par mois"},
-    {"name": "volume_depots_moyen", "type": "int", "description": "Volume moyen des dépôts"},
-    {"name": "volume_retraits_moyen", "type": "int", "description": "Volume moyen des retraits"},
-    {"name": "solde_moyen_compte", "type": "float", "description": "Solde moyen du compte"},
-    {"name": "tendance_solde_3m", "type": "float", "description": "Tendance du solde sur 3 mois"},
-    {"name": "regularite_depots_ecart_type", "type": "float", "description": "Écart-type de régularité des dépôts"},
-    {"name": "nb_contreparties_distinctes", "type": "int", "description": "Nombre de contreparties distinctes"},
-    {"name": "part_transferts_marchands", "type": "float", "description": "Part des transferts marchands"},
-    {"name": "nb_transactions_echouees", "type": "int", "description": "Nombre de transactions échouées"},
-    {"name": "frequence_recharges_mois", "type": "int", "description": "Fréquence de recharges par mois"},
-    {"name": "montant_moyen_recharge", "type": "int", "description": "Montant moyen des recharges"},
-    {"name": "anciennete_ligne_mois", "type": "int", "description": "Ancienneté de la ligne en mois"},
-    {"name": "nb_contacts_distincts", "type": "int", "description": "Nombre de contacts distincts"},
-    {"name": "stabilite_lieu_vie", "type": "float", "description": "Stabilité du lieu de vie"},
-    {"name": "membre_tontine", "type": "int", "description": "Membre d'une tontine (0/1)"},
-    {"name": "anciennete_tontine_mois", "type": "int", "description": "Ancienneté tontine en mois"},
-    {"name": "regularite_cotisations_tontine", "type": "float", "description": "Régularité des cotisations tontine"},
-    {"name": "montant_moyen_cotisation", "type": "int", "description": "Montant moyen cotisation"},
-    {"name": "deja_beneficiaire_tour", "type": "int", "description": "Déjà bénéficiaire du tour (0/1)"},
-    {"name": "score_aptitude_entrepreneuriale", "type": "float", "description": "Score d'aptitude entrepreneuriale"},
-    {"name": "score_integrite", "type": "float", "description": "Score d'intégrité"},
-    {"name": "locus_controle_interne", "type": "float", "description": "Locus de contrôle interne"},
-    {"name": "proximite_marche_km", "type": "float", "description": "Proximité du marché en km"},
-    {"name": "indicateur_jour_marche", "type": "float", "description": "Indicateur jour de marché"},
-    {"name": "membre_groupement_pro", "type": "int", "description": "Membre groupement professionnel (0/1)"},
-    {"name": "premiere_fois", "type": "int", "description": "Première demande (0/1)"},
-    {"name": "montant_demande", "type": "float", "description": "Montant demandé"},
-    {"name": "duree_credit_mois", "type": "int", "description": "Durée de crédit en mois"},
-    {"name": "garantie", "type": "float", "description": "Garantie offerte"}
+    {
+      "name": "age",
+      "type": "float",
+      "description": "age"
+    },
+    {
+      "name": "anciennete_activite_mois",
+      "type": "float",
+      "description": "anciennete_activite_mois"
+    },
+    {
+      "name": "revenu_mensuel_declare",
+      "type": "float",
+      "description": "revenu_mensuel_declare"
+    },
+    {
+      "name": "depenses_mensuelles",
+      "type": "float",
+      "description": "depenses_mensuelles"
+    },
+    {
+      "name": "proprietaire_local",
+      "type": "float",
+      "description": "proprietaire_local"
+    },
+    {
+      "name": "nombre_employes",
+      "type": "float",
+      "description": "nombre_employes"
+    },
+    {
+      "name": "nb_transactions_mois",
+      "type": "float",
+      "description": "nb_transactions_mois"
+    },
+    {
+      "name": "volume_depots_moyen",
+      "type": "float",
+      "description": "volume_depots_moyen"
+    },
+    {
+      "name": "volume_retraits_moyen",
+      "type": "float",
+      "description": "volume_retraits_moyen"
+    },
+    {
+      "name": "solde_moyen_compte",
+      "type": "float",
+      "description": "solde_moyen_compte"
+    },
+    {
+      "name": "tendance_solde_3m",
+      "type": "float",
+      "description": "tendance_solde_3m"
+    },
+    {
+      "name": "regularite_depots_ecart_type",
+      "type": "float",
+      "description": "regularite_depots_ecart_type"
+    },
+    {
+      "name": "nb_contreparties_distinctes",
+      "type": "float",
+      "description": "nb_contreparties_distinctes"
+    },
+    {
+      "name": "part_transferts_marchands",
+      "type": "float",
+      "description": "part_transferts_marchands"
+    },
+    {
+      "name": "nb_transactions_echouees",
+      "type": "float",
+      "description": "nb_transactions_echouees"
+    },
+    {
+      "name": "frequence_recharges_mois",
+      "type": "float",
+      "description": "frequence_recharges_mois"
+    },
+    {
+      "name": "montant_moyen_recharge",
+      "type": "float",
+      "description": "montant_moyen_recharge"
+    },
+    {
+      "name": "anciennete_ligne_mois",
+      "type": "float",
+      "description": "anciennete_ligne_mois"
+    },
+    {
+      "name": "nb_contacts_distincts",
+      "type": "float",
+      "description": "nb_contacts_distincts"
+    },
+    {
+      "name": "stabilite_lieu_vie",
+      "type": "float",
+      "description": "stabilite_lieu_vie"
+    },
+    {
+      "name": "membre_tontine",
+      "type": "float",
+      "description": "membre_tontine"
+    },
+    {
+      "name": "anciennete_tontine_mois",
+      "type": "float",
+      "description": "anciennete_tontine_mois"
+    },
+    {
+      "name": "regularite_cotisations_tontine",
+      "type": "float",
+      "description": "regularite_cotisations_tontine"
+    },
+    {
+      "name": "montant_moyen_cotisation",
+      "type": "float",
+      "description": "montant_moyen_cotisation"
+    },
+    {
+      "name": "deja_beneficiaire_tour",
+      "type": "float",
+      "description": "deja_beneficiaire_tour"
+    },
+    {
+      "name": "score_aptitude_entrepreneuriale",
+      "type": "float",
+      "description": "score_aptitude_entrepreneuriale"
+    },
+    {
+      "name": "score_integrite",
+      "type": "float",
+      "description": "score_integrite"
+    },
+    {
+      "name": "locus_controle_interne",
+      "type": "float",
+      "description": "locus_controle_interne"
+    },
+    {
+      "name": "proximite_marche_km",
+      "type": "float",
+      "description": "proximite_marche_km"
+    },
+    {
+      "name": "indicateur_jour_marche",
+      "type": "float",
+      "description": "indicateur_jour_marche"
+    },
+    {
+      "name": "membre_groupement_pro",
+      "type": "float",
+      "description": "membre_groupement_pro"
+    },
+    {
+      "name": "premiere_fois",
+      "type": "float",
+      "description": "premiere_fois"
+    },
+    {
+      "name": "montant_demande",
+      "type": "float",
+      "description": "montant_demande"
+    },
+    {
+      "name": "duree_credit_mois",
+      "type": "float",
+      "description": "duree_credit_mois"
+    },
+    {
+      "name": "garantie",
+      "type": "float",
+      "description": "garantie"
+    },
+    {
+      "name": "genre_Homme",
+      "type": "float",
+      "description": "genre_Homme"
+    },
+    {
+      "name": "niveau_education_Primaire",
+      "type": "float",
+      "description": "niveau_education_Primaire"
+    },
+    {
+      "name": "niveau_education_Secondaire",
+      "type": "float",
+      "description": "niveau_education_Secondaire"
+    },
+    {
+      "name": "niveau_education_Sup\u00e9rieur",
+      "type": "float",
+      "description": "niveau_education_Sup\u00e9rieur"
+    },
+    {
+      "name": "situation_familiale_Divorc\u00e9(e)",
+      "type": "float",
+      "description": "situation_familiale_Divorc\u00e9(e)"
+    },
+    {
+      "name": "situation_familiale_Mari\u00e9(e)",
+      "type": "float",
+      "description": "situation_familiale_Mari\u00e9(e)"
+    },
+    {
+      "name": "situation_familiale_Veuf(ve)",
+      "type": "float",
+      "description": "situation_familiale_Veuf(ve)"
+    },
+    {
+      "name": "departement_Atacora",
+      "type": "float",
+      "description": "departement_Atacora"
+    },
+    {
+      "name": "departement_Atlantique",
+      "type": "float",
+      "description": "departement_Atlantique"
+    },
+    {
+      "name": "departement_Borgou",
+      "type": "float",
+      "description": "departement_Borgou"
+    },
+    {
+      "name": "departement_Collines",
+      "type": "float",
+      "description": "departement_Collines"
+    },
+    {
+      "name": "departement_Couffo",
+      "type": "float",
+      "description": "departement_Couffo"
+    },
+    {
+      "name": "departement_Donga",
+      "type": "float",
+      "description": "departement_Donga"
+    },
+    {
+      "name": "departement_Littoral",
+      "type": "float",
+      "description": "departement_Littoral"
+    },
+    {
+      "name": "departement_Mono",
+      "type": "float",
+      "description": "departement_Mono"
+    },
+    {
+      "name": "departement_Ou\u00e9m\u00e9",
+      "type": "float",
+      "description": "departement_Ou\u00e9m\u00e9"
+    },
+    {
+      "name": "departement_Plateau",
+      "type": "float",
+      "description": "departement_Plateau"
+    },
+    {
+      "name": "departement_Zou",
+      "type": "float",
+      "description": "departement_Zou"
+    },
+    {
+      "name": "secteur_activite_Autre petit commerce",
+      "type": "float",
+      "description": "secteur_activite_Autre petit commerce"
+    },
+    {
+      "name": "secteur_activite_Revendeuse en d\u00e9tail",
+      "type": "float",
+      "description": "secteur_activite_Revendeuse en d\u00e9tail"
+    },
+    {
+      "name": "secteur_activite_Revendeuse en gros",
+      "type": "float",
+      "description": "secteur_activite_Revendeuse en gros"
+    },
+    {
+      "name": "secteur_activite_Vendeuse",
+      "type": "float",
+      "description": "secteur_activite_Vendeuse"
+    }
   ]
 }

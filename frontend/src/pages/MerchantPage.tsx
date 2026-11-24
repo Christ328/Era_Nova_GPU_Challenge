@@ -33,24 +33,28 @@ export default function MerchantPage() {
         <div className="card">
           <h3 className="font-semibold mb-4">Informations générales</h3>
           <dl className="space-y-3 text-sm">
-            <InfoRow label="Activité" value={merchant.activity} />
-            <InfoRow label="Zone" value={merchant.zone} />
-            <InfoRow label="Taille" value={(merchant as any).activity_size} />
-            <InfoRow label="Ancienneté" value={`${merchant.activity_age_months} mois`} />
-            <InfoRow label="Primo-emprunteur" value={merchant.is_first_time_borrower ? 'Oui' : 'Non'} />
-            <InfoRow label="Complétude données" value={`${((merchant.data_completeness ?? 0) * 100).toFixed(0)}%`} />
-            <InfoRow label="Incohérences" value={(merchant as any).has_inconsistencies ? 'Détectées' : 'Aucune'} />
+            <InfoRow label="Genre" value={(merchant as any).genre} />
+            <InfoRow label="Âge" value={(merchant as any).age} />
+            <InfoRow label="Éducation" value={(merchant as any).niveau_education} />
+            <InfoRow label="Situation familiale" value={(merchant as any).situation_familiale} />
+            <InfoRow label="Département" value={(merchant as any).departement} />
+            <InfoRow label="Secteur" value={(merchant as any).secteur_activite} />
+            <InfoRow label="Ancienneté" value={`${(merchant as any).anciennete_activite_mois} mois`} />
+            <InfoRow label="Première fois" value={(merchant as any).premiere_fois ? 'Oui' : 'Non'} />
           </dl>
         </div>
 
         <div className="card">
           <h3 className="font-semibold mb-4">Indicateurs financiers</h3>
           <dl className="space-y-3 text-sm">
-            <InfoRow label="Revenu mensuel" value={`${((merchant as any).monthly_income_mean ?? 0).toLocaleString()} FCFA`} />
-            <InfoRow label="Ratio dépenses/revenus" value={`${(((merchant as any).expense_income_ratio ?? 0) * 100).toFixed(0)}%`} />
-            <InfoRow label="Marge nette" value={`${(((merchant as any).margin_ratio ?? 0) * 100).toFixed(0)}%`} />
-            <InfoRow label="Régularité" value={`${(((merchant as any).regularity_score ?? 0) * 100).toFixed(0)}%`} />
-            <InfoRow label="Documentation" value={`${(((merchant as any).documentation_quality ?? 0) * 100).toFixed(0)}%`} />
+            <InfoRow label="Revenu mensuel" value={`${((merchant as any).revenu_mensuel_declare ?? 0).toLocaleString()} FCFA`} />
+            <InfoRow label="Dépenses mensuelles" value={`${((merchant as any).depenses_mensuelles ?? 0).toLocaleString()} FCFA`} />
+            <InfoRow label="Solde moyen" value={`${((merchant as any).solde_moyen_compte ?? 0).toLocaleString()} FCFA`} />
+            <InfoRow label="Transactions/mois" value={(merchant as any).nb_transactions_mois} />
+            <InfoRow label="Score intégrité" value={`${(((merchant as any).score_integrite ?? 0) * 100).toFixed(0)}%`} />
+            <InfoRow label="Aptitude entrepreneuriale" value={(merchant as any).score_aptitude_entrepreneuriale} />
+            <InfoRow label="Montant demandé" value={`${((merchant as any).montant_demande ?? 0).toLocaleString()} FCFA`} />
+            <InfoRow label="Défaut paiement" value={(merchant as any).defaut_paiement ? 'Oui' : 'Non'} />
           </dl>
         </div>
       </div>

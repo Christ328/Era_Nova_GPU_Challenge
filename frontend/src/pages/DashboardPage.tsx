@@ -18,7 +18,7 @@ export default function DashboardPage() {
       .finally(() => setLoading(false))
   }, [])
 
-  if (loading) return <LoadingState />
+  if (loading) return <div className="flex items-center justify-center h-64 text-text-secondary">Chargement...</div>
 
   return (
     <div className="space-y-6">
@@ -74,8 +74,4 @@ function KpiCard({ icon: Icon, label, value, color }: any) {
       <p className="text-sm text-text-secondary">{label}</p>
     </div>
   )
-}
-
-function LoadingState() {
-  return <div className="flex items-center justify-center h-64 text-text-secondary">Chargement...</div>
 }
