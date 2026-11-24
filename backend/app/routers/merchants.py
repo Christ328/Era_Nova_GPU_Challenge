@@ -29,8 +29,11 @@ def list_merchants(
 
     merchants = []
     for _, row in page_df.iterrows():
+        mid = str(row.get("id_commercant", ""))
+        if not mid or mid == "nan":
+            continue
         merchants.append(MerchantSummary(
-            merchant_id=str(row.get("id_commercant", "")),
+            merchant_id=mid,
             activity=str(row.get("secteur_activite", "")) if pd.notna(row.get("secteur_activite")) else None,
             zone=str(row.get("departement", "")) if pd.notna(row.get("departement")) else None,
             is_first_time_borrower=bool(row.get("premiere_fois", 0)) if pd.notna(row.get("premiere_fois")) else None,
@@ -48,11 +51,13 @@ def get_merchant(merchant_id: str):
     df = pd.read_csv(settings.DEMO_PROFILES_PATH)
     match = df[df["id_commercant"] == merchant_id]
     if len(match) == 0:
-        return {"error": "Merchant not found"}
+        return {"error": f"Merchant {merchant_id} not found"}
 
     row = match.iloc[0]
-    result = {}
+    result = {"merchant_id": merchant_id}
     for col in df.columns:
+        if col == "id_commercant":
+            continue
         val = row[col]
         if pd.isna(val):
             result[col] = None

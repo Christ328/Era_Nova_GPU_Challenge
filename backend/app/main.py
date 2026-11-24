@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import health, merchants, assessments, benchmarks
+from app.routers import health, merchants, assessments, benchmarks, rules
 
 app = FastAPI(
     title="GPU Credit Scoring API",
@@ -22,6 +22,7 @@ app.include_router(health.router, prefix=settings.API_V1_PREFIX, tags=["health"]
 app.include_router(merchants.router, prefix=settings.API_V1_PREFIX, tags=["merchants"])
 app.include_router(assessments.router, prefix=settings.API_V1_PREFIX, tags=["assessments"])
 app.include_router(benchmarks.router, prefix=settings.API_V1_PREFIX, tags=["benchmarks"])
+app.include_router(rules.router, prefix=settings.API_V1_PREFIX, tags=["rules"])
 
 @app.get("/")
 def root():

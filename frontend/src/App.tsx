@@ -5,6 +5,7 @@ import MerchantsPage from './pages/MerchantsPage'
 import MerchantPage from './pages/MerchantPage'
 import AssessmentPage from './pages/AssessmentPage'
 import CustomScorePage from './pages/CustomScorePage'
+import RulesPage from './pages/RulesPage'
 import ReviewPage from './pages/ReviewPage'
 import GpuBenchmarkPage from './pages/GpuBenchmarkPage'
 
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/merchants/:id" element={<MerchantPage />} />
         <Route path="/assessment/:id" element={<AssessmentPage />} />
         <Route path="/custom" element={<CustomScorePage />} />
+        <Route path="/rules" element={<RulesPage />} />
         <Route path="/review/:id" element={<ReviewPage />} />
         <Route path="/benchmark" element={<GpuBenchmarkPage />} />
       </Route>

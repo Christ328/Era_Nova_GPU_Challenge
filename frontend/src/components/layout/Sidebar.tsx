@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, Users, CreditCard, Cpu } from 'lucide-react'
+import { LayoutDashboard, Users, CreditCard, Cpu, Shield } from 'lucide-react'
 
 const links = [
   { to: '/', label: 'Tableau de bord', icon: LayoutDashboard, end: true },
   { to: '/merchants', label: 'Commerçants', icon: Users, end: false },
   { to: '/custom', label: 'Évaluation manuelle', icon: CreditCard, end: false },
+  { to: '/rules', label: 'Règles métier', icon: Shield, end: false },
   { to: '/benchmark', label: 'Benchmark GPU', icon: Cpu, end: false },
 ]
 
