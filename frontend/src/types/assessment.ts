@@ -12,6 +12,14 @@ export interface Alert {
   rule_name: string
 }
 
+export interface CounterProposal {
+  label: string
+  amount: number
+  duration: number
+  score: number
+  effort_rate: number
+}
+
 export interface Assessment {
   merchant_id: string
   score: number
@@ -29,4 +37,10 @@ export interface Assessment {
   top_factors: ShapFactor[]
   alerts: Alert[]
   explanation: string
+  score_max?: number
+  decision?: 'ACCEPTED' | 'MANUAL_REVIEW' | 'REFUSED_RISK' | 'REFUSED_REGULATORY'
+  teg?: number
+  teg_blocked?: boolean
+  fraud_detected?: boolean
+  counter_proposals?: CounterProposal[]
 }

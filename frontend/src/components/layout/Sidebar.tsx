@@ -1,12 +1,14 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, Users, CreditCard, Cpu, Shield, X } from 'lucide-react'
+import { LayoutDashboard, Users, CreditCard, Cpu, Shield, X, Settings, ClipboardList } from 'lucide-react'
 
 const links = [
   { to: '/', label: 'Tableau de bord', icon: LayoutDashboard, end: true },
   { to: '/merchants', label: 'Commerçants', icon: Users, end: false },
+  { to: '/agent', label: 'Nouvelle demande', icon: ClipboardList, end: false },
   { to: '/custom', label: 'Évaluation manuelle', icon: CreditCard, end: false },
   { to: '/rules', label: 'Règles métier', icon: Shield, end: false },
   { to: '/benchmark', label: 'Benchmark GPU', icon: Cpu, end: false },
+  { to: '/imf', label: 'Config IMF', icon: Settings, end: false },
 ]
 
 interface SidebarProps {
@@ -28,8 +30,8 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
     >
       <div className="p-6 border-b border-border flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-bold text-primary">GPU Credit Scoring</h1>
-          <p className="text-xs text-text-secondary mt-1">Évaluation risque commerçants</p>
+          <h1 className="text-lg font-bold text-primary">VIGIE-TRUST</h1>
+          <p className="text-xs text-text-secondary mt-1">Microfinance Intelligence</p>
         </div>
         {/* Close button — only shown on mobile */}
         <button
@@ -59,7 +61,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
       </nav>
 
       <div className="p-4 border-t border-border">
-        <span className="badge bg-gpu/10 text-gpu">GPU Accelerated</span>
+        <span className="badge bg-gpu/10 text-gpu">VIGIE-TRUST</span>
         <p className="text-xs text-text-secondary mt-2">v1.0.0</p>
       </div>
     </aside>

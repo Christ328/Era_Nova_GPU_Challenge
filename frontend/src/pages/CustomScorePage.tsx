@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { scoreCustom } from '../api/assessments'
-import type { Assessment } from '../types/assessment'
+import type { Assessment, CounterProposal } from '../types/assessment'
 import ScoreCard from '../components/scoring/ScoreCard'
 import RiskBadge from '../components/scoring/RiskBadge'
 import ScoringLoader from '../components/scoring/ScoringLoader'
@@ -86,6 +86,7 @@ export default function CustomScorePage() {
   const [features, setFeatures] = useState<Record<string, number>>(DEFAULT_FEATURES)
   const [assessment, setAssessment] = useState<Assessment | null>(null)
   const [loading, setLoading] = useState(false)
+  const [lastFeatures, setLastFeatures] = useState<Record<string, number>>(DEFAULT_FEATURES)
 
   const handleChange = (key: string, value: string) => {
     setFeatures(prev => ({ ...prev, [key]: parseFloat(value) || 0 }))
@@ -97,11 +98,26 @@ export default function CustomScorePage() {
       return
     }
     setLoading(true)
+    setLastFeatures(features)
     try {
       const result = await scoreCustom(features)
       setAssessment(result)
     } catch (e: any) {
       console.error('Score error:', e)
+      alert('Erreur: ' + (e.response?.data?.detail || e.message || 'API inaccessible'))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleCounterProposal = async (proposal: CounterProposal) => {
+    setLoading(true)
+    const proposalFeatures = { ...lastFeatures, montant_demande: proposal.amount, duree_credit_mois: proposal.duration }
+    try {
+      const result = await scoreCustom(proposalFeatures)
+      setAssessment(result)
+    } catch (e: any) {
+      console.error('Counter-proposal error:', e)
       alert('Erreur: ' + (e.response?.data?.detail || e.message || 'API inaccessible'))
     } finally {
       setLoading(false)
@@ -149,6 +165,34 @@ export default function CustomScorePage() {
         <div className="space-y-6 mt-8">
           <h3 className="text-xl font-bold">Résultat</h3>
 
+          {/* Fraud detection banner */}
+          {assessment.fraud_detected && (
+            <div className="p-4 rounded-xl bg-danger/10 border-2 border-danger text-danger font-bold text-base flex items-center gap-3">
+              <span className="text-2xl">🚨</span>
+              <span>Fraude détectée</span>
+            </div>
+          )}
+
+          {/* Decision badge */}
+          {assessment.decision && (
+            <div className="text-center">
+              {assessment.decision === 'ACCEPTED' && <span className="badge-accepted">ACCEPTÉ</span>}
+              {assessment.decision === 'REFUSED_RISK' && <span className="badge-refused">REFUSÉ — RISQUE</span>}
+              {assessment.decision === 'REFUSED_REGULATORY' && <span className="badge-refused">REFUSÉ — MOTIF RÉGLEMENTAIRE</span>}
+              {assessment.decision === 'MANUAL_REVIEW' && <span className="badge-review">REVUE MANUELLE REQUISE</span>}
+            </div>
+          )}
+
+          {/* TEG */}
+          {assessment.teg !== undefined && (
+            <div className={`p-4 rounded-xl border-2 ${assessment.teg_blocked ? 'bg-danger/10 border-danger text-danger' : 'bg-primary/5 border-primary/20 text-text-primary'}`}>
+              {assessment.teg_blocked
+                ? `Le TEG de ${assessment.teg}% dépasse le plafond légal de 24% (BCEAO).`
+                : `TEG : ${assessment.teg}%`
+              }
+            </div>
+          )}
+
           {/* Alerts first — prominent, full-width */}
           {assessment.alerts.length > 0 && (
             <div className="space-y-3">
@@ -180,12 +224,12 @@ export default function CustomScorePage() {
                 <div className="flex flex-col items-center p-3 rounded-lg bg-primary/5 border border-primary/20">
                   <span className="text-xs text-text-secondary mb-1">Score ML</span>
                   <span className="text-2xl font-bold text-primary">{assessment.ml_score ?? '—'}</span>
-                  <span className="text-xs text-text-secondary mt-1">poids {assessment.score_weights ? Math.round(assessment.score_weights.ml * 100) : '—'}%</span>
+                  <span className="text-xs text-text-secondary mt-1">/1000 · poids {assessment.score_weights ? Math.round(assessment.score_weights.ml * 100) : '—'}%</span>
                 </div>
                 <div className="flex flex-col items-center p-3 rounded-lg bg-success/5 border border-success/20">
                   <span className="text-xs text-text-secondary mb-1">Score Règles</span>
                   <span className="text-2xl font-bold" style={{color: '#168A62'}}>{assessment.business_score ?? '—'}</span>
-                  <span className="text-xs text-text-secondary mt-1">poids {assessment.score_weights ? Math.round(assessment.score_weights.rules * 100) : '—'}%</span>
+                  <span className="text-xs text-text-secondary mt-1">/1000 · poids {assessment.score_weights ? Math.round(assessment.score_weights.rules * 100) : '—'}%</span>
                 </div>
               </div>
             </div>
@@ -245,6 +289,28 @@ export default function CustomScorePage() {
             <h3 className="font-semibold mb-4">Graphique SHAP</h3>
             <ShapBarChart factors={assessment.top_factors} />
           </div>
+
+          {/* Counter-proposals */}
+          {assessment.counter_proposals && assessment.counter_proposals.length > 0 && (
+            <div>
+              <h4 className="font-semibold mb-3">Alternatives possibles</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {assessment.counter_proposals.map((proposal, i) => (
+                  <button
+                    key={i}
+                    className="card text-left hover:border-primary hover:shadow-md transition-all cursor-pointer"
+                    onClick={() => handleCounterProposal(proposal)}
+                  >
+                    <div className="font-semibold text-primary mb-1">{proposal.label}</div>
+                    <div className="text-sm text-text-secondary">
+                      {proposal.amount.toLocaleString()} FCFA · {proposal.duration} mois
+                    </div>
+                    <div className="text-sm font-medium mt-1">Score : {proposal.score}/1000</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
