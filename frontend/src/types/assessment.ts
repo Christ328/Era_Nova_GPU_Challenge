@@ -15,6 +15,9 @@ export interface Alert {
 export interface Assessment {
   merchant_id: string
   score: number
+  ml_score?: number
+  business_score?: number
+  score_weights?: { ml: number; rules: number }
   risk_level: string
   confidence: string
   data_quality: number

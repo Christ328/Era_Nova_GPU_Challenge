@@ -38,6 +38,9 @@ def create_assessment(merchant_id: str):
     return AssessmentResponse(
         merchant_id=merchant_id,
         score=result["score"],
+        ml_score=result.get("ml_score"),
+        business_score=result.get("business_score"),
+        score_weights=result.get("score_weights"),
         risk_level=result["risk_level"],
         confidence=result["confidence"],
         data_quality=result["data_quality"],
@@ -63,6 +66,9 @@ def score_custom(features: dict):
     return AssessmentResponse(
         merchant_id=features.get("id_commercant", "CUSTOM"),
         score=result["score"],
+        ml_score=result.get("ml_score"),
+        business_score=result.get("business_score"),
+        score_weights=result.get("score_weights"),
         risk_level=result["risk_level"],
         confidence=result["confidence"],
         data_quality=result["data_quality"],

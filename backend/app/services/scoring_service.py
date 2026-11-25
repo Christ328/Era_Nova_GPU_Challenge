@@ -40,7 +40,21 @@ class ScoringService:
             requested_amount = MAX_LOAN_AMOUNT
 
         proba = model_service.predict(features)
-        score = int(round((1 - proba) * 100))
+        ml_score = int(round((1 - proba) * 100))
+        ml_score = max(0, min(100, ml_score))
+
+        business_score_val = rules_service.compute_business_score(features)
+        business_score = int(round(business_score_val))
+
+        data_quality = self._get_data_quality(features)
+
+        # Dynamic weighting: trust rules more when data quality is low
+        if data_quality < 0.5:
+            alpha, beta = 0.35, 0.65
+        else:
+            alpha, beta = 0.55, 0.45
+
+        score = int(round(alpha * ml_score + beta * business_score))
         score = max(0, min(100, score))
 
         alerts, adjustments = rules_service.evaluate(features, score, 0.5)
@@ -65,7 +79,7 @@ class ScoringService:
         risk_level = self._get_risk_level(score)
         confidence_val = self._get_confidence(features, score)
         confidence_level = self._get_confidence_level(confidence_val)
-        data_quality = self._get_data_quality(features)
+        # data_quality already computed above for weighting
 
         product_type, amount_min, amount_max, duration = self._recommend(
             score, risk_level, adjustments, features
@@ -78,6 +92,9 @@ class ScoringService:
 
         return {
             "score": score,
+            "ml_score": ml_score,
+            "business_score": business_score,
+            "score_weights": {"ml": alpha, "rules": beta},
             "risk_level": risk_level,
             "confidence": confidence_level,
             "confidence_value": confidence_val,
@@ -110,7 +127,11 @@ class ScoringService:
         for amount in range(requested - 5000, 4999, -5000):
             test_features = {**features, "montant_demande": amount}
             proba = model_service.predict(test_features)
-            score = int(round((1 - proba) * 100))
+            ml_s = int(round((1 - proba) * 100))
+            biz_s = int(round(rules_service.compute_business_score(test_features)))
+            dq = self._get_data_quality(test_features)
+            a, b = (0.35, 0.65) if dq < 0.5 else (0.55, 0.45)
+            score = int(round(a * ml_s + b * biz_s))
             score = max(0, min(100, score))
             if score >= SCORE_THRESHOLD:
                 return (amount, score, True)

@@ -17,6 +17,9 @@ class Alert(BaseModel):
 class AssessmentResponse(BaseModel):
     merchant_id: str
     score: int = Field(ge=0, le=100)
+    ml_score: Optional[int] = None
+    business_score: Optional[int] = None
+    score_weights: Optional[dict] = None
     risk_level: RiskLevel
     confidence: ConfidenceLevel
     data_quality: float = Field(ge=0, le=1)

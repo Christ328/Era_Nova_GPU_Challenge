@@ -172,6 +172,25 @@ export default function CustomScorePage() {
             <RiskBadge riskLevel={assessment.risk_level} confidence={assessment.confidence} />
           </div>
 
+          {/* Hybrid score breakdown */}
+          {(assessment.ml_score !== undefined || assessment.business_score !== undefined) && (
+            <div className="card bg-surface-alt border border-border">
+              <h4 className="text-sm font-semibold text-text-secondary mb-3">Décomposition du score</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col items-center p-3 rounded-lg bg-primary/5 border border-primary/20">
+                  <span className="text-xs text-text-secondary mb-1">Score ML</span>
+                  <span className="text-2xl font-bold text-primary">{assessment.ml_score ?? '—'}</span>
+                  <span className="text-xs text-text-secondary mt-1">poids {assessment.score_weights ? Math.round(assessment.score_weights.ml * 100) : '—'}%</span>
+                </div>
+                <div className="flex flex-col items-center p-3 rounded-lg bg-success/5 border border-success/20">
+                  <span className="text-xs text-text-secondary mb-1">Score Règles</span>
+                  <span className="text-2xl font-bold" style={{color: '#168A62'}}>{assessment.business_score ?? '—'}</span>
+                  <span className="text-xs text-text-secondary mt-1">poids {assessment.score_weights ? Math.round(assessment.score_weights.rules * 100) : '—'}%</span>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="card">
             <h3 className="font-semibold mb-4">Explication</h3>
             <p className="text-text-secondary mb-6">{assessment.explanation}</p>
