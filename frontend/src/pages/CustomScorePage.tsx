@@ -5,7 +5,6 @@ import ScoreCard from '../components/scoring/ScoreCard'
 import RiskBadge from '../components/scoring/RiskBadge'
 import ScoringLoader from '../components/scoring/ScoringLoader'
 import ShapBarChart from '../components/explainability/ShapBarChart'
-import FactorList from '../components/explainability/FactorList'
 
 const DEFAULT_FEATURES: Record<string, number> = {
   age: 35,
@@ -139,8 +138,7 @@ export default function CustomScorePage() {
               className="input-field"
               step={key.includes('revenu') || key.includes('depenses') || key.includes('montant') || key.includes('solde') || key.includes('volume') ? 1000 : 0.1}
               max={key === 'montant_demande' ? 300000 : undefined}
-              min={key === 'montant_demande' ? 5000 : undefined}
-            />
+              min={key === 'montant_demande' ? 5000 : undefined}            />
           </div>
         ))}
       </div>
@@ -175,19 +173,58 @@ export default function CustomScorePage() {
           </div>
 
           <div className="card">
-            <h3 className="font-semibold mb-2">Explication</h3>
-            <p className="text-text-secondary">{assessment.explanation}</p>
+            <h3 className="font-semibold mb-4">Explication</h3>
+            <p className="text-text-secondary mb-6">{assessment.explanation}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Positive factors */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-3 h-3 rounded-full" style={{ background: '#168A62' }} />
+                  <h4 className="font-semibold text-sm" style={{ color: '#168A62' }}>Facteurs favorables</h4>
+                </div>
+                <div className="space-y-2">
+                  {assessment.top_factors.filter(f => f.direction === 'positive').map((f, i) => (
+                    <div key={i} className="flex items-center justify-between p-2 rounded-lg text-sm bg-success/5">
+                      <span className="text-text-primary">{f.label}</span>
+                      <div className="flex items-center gap-2 text-right">
+                        <span className="text-text-secondary text-xs">{typeof f.value === 'number' ? f.value.toLocaleString() : f.value}</span>
+                        <span className="font-medium" style={{ color: '#168A62' }}>+{f.impact.toFixed(3)}</span>
+                      </div>
+                    </div>
+                  ))}
+                  {assessment.top_factors.filter(f => f.direction === 'positive').length === 0 && (
+                    <p className="text-xs text-text-secondary italic">Aucun facteur favorable détecté.</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Negative factors */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-3 h-3 rounded-full" style={{ background: '#C2414B' }} />
+                  <h4 className="font-semibold text-sm" style={{ color: '#C2414B' }}>Facteurs pénalisants</h4>
+                </div>
+                <div className="space-y-2">
+                  {assessment.top_factors.filter(f => f.direction === 'negative').map((f, i) => (
+                    <div key={i} className="flex items-center justify-between p-2 rounded-lg text-sm bg-danger/5">
+                      <span className="text-text-primary">{f.label}</span>
+                      <div className="flex items-center gap-2 text-right">
+                        <span className="text-text-secondary text-xs">{typeof f.value === 'number' ? f.value.toLocaleString() : f.value}</span>
+                        <span className="font-medium" style={{ color: '#C2414B' }}>{f.impact.toFixed(3)}</span>
+                      </div>
+                    </div>
+                  ))}
+                  {assessment.top_factors.filter(f => f.direction === 'negative').length === 0 && (
+                    <p className="text-xs text-text-secondary italic">Aucun facteur pénalisant détecté.</p>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="card">
-              <h3 className="font-semibold mb-4">Facteurs SHAP</h3>
-              <ShapBarChart factors={assessment.top_factors} />
-            </div>
-            <div className="card">
-              <h3 className="font-semibold mb-4">Détail des facteurs</h3>
-              <FactorList factors={assessment.top_factors} />
-            </div>
+          <div className="card">
+            <h3 className="font-semibold mb-4">Graphique SHAP</h3>
+            <ShapBarChart factors={assessment.top_factors} />
           </div>
         </div>
       )}
