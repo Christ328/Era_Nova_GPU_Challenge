@@ -88,6 +88,8 @@ class ShapService:
             if i >= len(shap_values):
                 break
             val = shap_values[i]
+            if abs(val) < 1e-6:   # skip features with zero contribution
+                continue
             factors.append({
                 "feature": fname,
                 "label": FEATURE_LABELS.get(fname, fname.replace("_", " ").title()),
@@ -97,7 +99,7 @@ class ShapService:
             })
 
         factors.sort(key=lambda x: abs(x["impact"]), reverse=True)
-        return factors[:10]
+        return factors[:15]  # return top 15 most impactful features
 
     def _mock_explain(self, features: Dict[str, Any]) -> List[Dict]:
         factors = []

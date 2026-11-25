@@ -49,11 +49,18 @@ class ScoringService:
         amount, score, iterated = self._iterate_amount(features, score, requested_amount)
 
         if iterated:
-            alerts.append({
-                "severity": "info",
-                "message": f"Montant adapté à {amount:,.0f} FCFA pour atteindre le score seuil de {SCORE_THRESHOLD}",
-                "rule_name": "amount_adjustment"
-            })
+            if score >= SCORE_THRESHOLD:
+                alerts.append({
+                    "severity": "info",
+                    "message": f"Montant adapté à {amount:,.0f} FCFA (score {score}/100 ≥ seuil {SCORE_THRESHOLD})",
+                    "rule_name": "amount_adjustment"
+                })
+            else:
+                alerts.append({
+                    "severity": "warning",
+                    "message": f"Aucun montant ≤ {MAX_LOAN_AMOUNT:,} FCFA n'atteint le seuil de {SCORE_THRESHOLD}. Meilleur score obtenu : {score}/100 pour {amount:,.0f} FCFA.",
+                    "rule_name": "amount_adjustment"
+                })
 
         risk_level = self._get_risk_level(score)
         confidence_val = self._get_confidence(features, score)
@@ -87,18 +94,20 @@ class ScoringService:
         }
 
     def _iterate_amount(self, features: Dict, initial_score: int, requested: int) -> tuple:
+        # Score already acceptable for the requested amount — no adjustment needed
         if initial_score >= SCORE_THRESHOLD:
             return (requested, initial_score, False)
 
-        if requested <= 0:
-            return (50000, 0, False)
+        if requested <= 50000:
+            return (requested, initial_score, False)
 
+        # Walk down from requested amount to 50 000 FCFA in 10 000-FCFA steps.
+        # Return the first amount where score >= SCORE_THRESHOLD.
+        # If none qualifies, return the amount that produced the highest score.
         best_score = initial_score
-        best_amount = 50000
+        best_amount = requested
 
-        for amount in range(requested, 49999, -10000):
-            if amount <= 0:
-                break
+        for amount in range(requested - 10000, 49999, -10000):
             test_features = {**features, "montant_demande": amount}
             proba = model_service.predict(test_features)
             score = int(round((1 - proba) * 100))
@@ -109,7 +118,7 @@ class ScoringService:
                 best_score = score
                 best_amount = amount
 
-        # No amount reached the threshold — return best found, never force score to 0
+        # No amount cleared the threshold — return best found (never force score to 0)
         return (best_amount, best_score, True)
 
     def _apply_score_caps(self, score: int, features: Dict, adjustments: Dict) -> int:

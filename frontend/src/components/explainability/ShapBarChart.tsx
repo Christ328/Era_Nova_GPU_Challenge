@@ -9,8 +9,8 @@ export default function ShapBarChart({ factors }: { factors: ShapFactor[] }) {
   }))
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
-      <BarChart data={data} layout="vertical" margin={{ left: 20, right: 20 }}>
+    <ResponsiveContainer width="100%" height={Math.max(300, factors.length * 28)}>
+      <BarChart data={data} layout="vertical" margin={{ left: 20, right: 40, top: 8, bottom: 8 }}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis type="number" />
         <YAxis dataKey="name" type="category" width={120} tick={{ fontSize: 11 }} />
