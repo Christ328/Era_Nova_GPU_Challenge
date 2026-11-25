@@ -3,6 +3,7 @@ import { scoreCustom } from '../api/assessments'
 import type { Assessment } from '../types/assessment'
 import ScoreCard from '../components/scoring/ScoreCard'
 import RiskBadge from '../components/scoring/RiskBadge'
+import ScoringLoader from '../components/scoring/ScoringLoader'
 import ShapBarChart from '../components/explainability/ShapBarChart'
 import FactorList from '../components/explainability/FactorList'
 
@@ -144,7 +145,9 @@ export default function CustomScorePage() {
         ))}
       </div>
 
-      {assessment && (
+      {loading && <ScoringLoader />}
+
+      {!loading && assessment && (
         <div className="space-y-6 mt-8">
           <h3 className="text-xl font-bold">Résultat</h3>
 
