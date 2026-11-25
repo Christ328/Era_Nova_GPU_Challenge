@@ -3,7 +3,6 @@ import { scoreCustom } from '../api/assessments'
 import type { Assessment } from '../types/assessment'
 import ScoreCard from '../components/scoring/ScoreCard'
 import RiskBadge from '../components/scoring/RiskBadge'
-import RecommendationCard from '../components/scoring/RecommendationCard'
 import ShapBarChart from '../components/explainability/ShapBarChart'
 import FactorList from '../components/explainability/FactorList'
 
@@ -93,6 +92,10 @@ export default function CustomScorePage() {
   }
 
   const handleScore = async () => {
+    if (features.montant_demande > 300000) {
+      alert('Le montant demandé ne peut pas dépasser 300 000 FCFA.')
+      return
+    }
     setLoading(true)
     try {
       const result = await scoreCustom(features)
@@ -134,6 +137,8 @@ export default function CustomScorePage() {
               onChange={e => handleChange(key, e.target.value)}
               className="input-field"
               step={key.includes('revenu') || key.includes('depenses') || key.includes('montant') || key.includes('solde') || key.includes('volume') ? 1000 : 0.1}
+              max={key === 'montant_demande' ? 300000 : undefined}
+              min={key === 'montant_demande' ? 5000 : undefined}
             />
           </div>
         ))}
@@ -142,10 +147,28 @@ export default function CustomScorePage() {
       {assessment && (
         <div className="space-y-6 mt-8">
           <h3 className="text-xl font-bold">Résultat</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+          {/* Alerts first — prominent, full-width */}
+          {assessment.alerts.length > 0 && (
+            <div className="space-y-3">
+              {assessment.alerts.map((a, i) => (
+                <div key={i} className={`p-4 rounded-xl text-base font-medium flex items-start gap-3 ${
+                  a.severity === 'error'   ? 'bg-danger/10 border-2 border-danger text-danger' :
+                  a.severity === 'warning' ? 'bg-warning/10 border-2 border-warning text-warning' :
+                                             'bg-primary/10 border-2 border-primary text-primary'
+                }`}>
+                  <span className="text-xl mt-0.5">
+                    {a.severity === 'error' ? '🚫' : a.severity === 'warning' ? '⚠️' : 'ℹ️'}
+                  </span>
+                  <span>{a.message}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <ScoreCard score={assessment.score} riskLevel={assessment.risk_level} />
             <RiskBadge riskLevel={assessment.risk_level} confidence={assessment.confidence} />
-            <RecommendationCard assessment={assessment} />
           </div>
 
           <div className="card">
@@ -163,23 +186,6 @@ export default function CustomScorePage() {
               <FactorList factors={assessment.top_factors} />
             </div>
           </div>
-
-          {assessment.alerts.length > 0 && (
-            <div className="card">
-              <h3 className="font-semibold mb-4">Alertes</h3>
-              <div className="space-y-2">
-                {assessment.alerts.map((a, i) => (
-                  <div key={i} className={`p-3 rounded-lg text-sm ${
-                    a.severity === 'error' ? 'bg-danger/10 border border-danger text-danger' :
-                    a.severity === 'warning' ? 'bg-warning/10 border border-warning text-warning' :
-                    'bg-primary/10 border border-primary text-primary'
-                  }`}>
-                    {a.message}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       )}
     </div>
