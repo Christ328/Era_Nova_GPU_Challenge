@@ -3,7 +3,7 @@ from typing import Dict, Any
 from app.services.model_service import model_service
 from app.services.shap_service import shap_service
 from app.services.rules_service import rules_service
-from app.schemas import RiskLevel, ConfidenceLevel, ProductType
+from app.schemas import RiskLevel, ConfidenceLevel
 
 logger = logging.getLogger(__name__)
 
@@ -20,12 +20,6 @@ CONFIDENCE_LEVELS = [
     (40, 69, ConfidenceLevel.MEDIUM),
     (70, 100, ConfidenceLevel.HIGH),
 ]
-
-PRODUCT_TYPES = {
-    "progressive_microloan": {"label": "Microcrédit progressif", "min": 50000, "max": 200000, "durations": [3, 6, 9]},
-    "standard_microloan": {"label": "Microcrédit standard", "min": 100000, "max": 300000, "durations": [6, 12, 18]},
-    "growth_microloan": {"label": "Microcrédit croissance", "min": 200000, "max": 300000, "durations": [12, 18, 24]},
-}
 
 MAX_LOAN_AMOUNT = 300000
 SCORE_THRESHOLD = 700
@@ -87,10 +81,6 @@ class ScoringService:
         confidence_val = self._get_confidence(features, score)
         confidence_level = self._get_confidence_level(confidence_val)
 
-        product_type, amount_min, amount_max, duration = self._recommend(
-            score, risk_level, adjustments, features
-        )
-
         top_factors = shap_service.explain(features)
         explanation = self._build_explanation(score, risk_level, top_factors)
 
@@ -105,10 +95,6 @@ class ScoringService:
             "confidence": confidence_level,
             "confidence_value": confidence_val,
             "data_quality": data_quality,
-            "recommended_amount_min": amount_min,
-            "recommended_amount_max": min(amount_max, MAX_LOAN_AMOUNT),
-            "recommended_duration_months": duration,
-            "product_type": product_type,
             "human_review_required": human_review,
             "top_factors": top_factors,
             "alerts": alerts,
@@ -210,25 +196,6 @@ class ScoringService:
             if min_c <= pct <= max_c:
                 return level
         return ConfidenceLevel.MEDIUM
-
-    def _recommend(self, score: int, risk: RiskLevel,
-                   adjustments: Dict, features: Dict) -> tuple:
-        if adjustments.get("no_auto_recommendation"):
-            return ("progressive_microloan", 50000, 100000, 3)
-        if score >= 750:
-            pt = "growth_microloan"
-        elif score >= 450:
-            pt = "standard_microloan"
-        else:
-            pt = "progressive_microloan"
-        if adjustments.get("progressive_amount"):
-            pt = "progressive_microloan"
-        info = PRODUCT_TYPES[pt]
-        multiplier = adjustments.get("amount_multiplier", 1.0)
-        amount_min = int(info["min"] * multiplier)
-        amount_max = int(info["max"] * multiplier)
-        duration = info["durations"][0]
-        return (pt, amount_min, amount_max, duration)
 
     def _build_explanation(self, score: int, risk: RiskLevel,
                            factors: list) -> str:

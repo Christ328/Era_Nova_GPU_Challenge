@@ -29,10 +29,6 @@ export interface Assessment {
   risk_level: string
   confidence: string
   data_quality: number
-  recommended_amount_min: number
-  recommended_amount_max: number
-  recommended_duration_months: number
-  product_type: string
   human_review_required: boolean
   top_factors: ShapFactor[]
   alerts: Alert[]

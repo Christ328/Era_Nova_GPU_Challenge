@@ -4,7 +4,6 @@ import { createAssessment } from '../api/assessments'
 import type { Assessment } from '../types/assessment'
 import ScoreCard from '../components/scoring/ScoreCard'
 import RiskBadge from '../components/scoring/RiskBadge'
-import RecommendationCard from '../components/scoring/RecommendationCard'
 import ShapBarChart from '../components/explainability/ShapBarChart'
 import FactorList from '../components/explainability/FactorList'
 
@@ -39,10 +38,9 @@ export default function AssessmentPage() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <ScoreCard score={assessment.score} riskLevel={assessment.risk_level} />
         <RiskBadge riskLevel={assessment.risk_level} confidence={assessment.confidence} />
-        <RecommendationCard assessment={assessment} />
       </div>
 
       <div className="card">

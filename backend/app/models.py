@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
-from app.schemas import RiskLevel, ConfidenceLevel, ProductType, Direction, Severity
+from app.schemas import RiskLevel, ConfidenceLevel, Direction, Severity
 
 class ShapFactor(BaseModel):
     feature: str
@@ -23,10 +23,6 @@ class AssessmentResponse(BaseModel):
     risk_level: RiskLevel
     confidence: ConfidenceLevel
     data_quality: float = Field(ge=0, le=1)
-    recommended_amount_min: int
-    recommended_amount_max: int
-    recommended_duration_months: int
-    product_type: ProductType
     human_review_required: bool
     top_factors: List[ShapFactor]
     alerts: List[Alert]
@@ -57,10 +53,6 @@ class ScoringResponse(BaseModel):
     alerts: List[Alert]
     confidence: ConfidenceLevel
     data_quality: float = Field(ge=0, le=1)
-    recommended_amount_min: int
-    recommended_amount_max: int
-    recommended_duration_months: int
-    product_type: ProductType
     human_review_required: bool
 
 class MerchantSummary(BaseModel):

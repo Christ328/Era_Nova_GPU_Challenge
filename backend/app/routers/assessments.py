@@ -50,10 +50,6 @@ def create_assessment(merchant_id: str):
         risk_level=result["risk_level"],
         confidence=result["confidence"],
         data_quality=result["data_quality"],
-        recommended_amount_min=result["recommended_amount_min"],
-        recommended_amount_max=result["recommended_amount_max"],
-        recommended_duration_months=result["recommended_duration_months"],
-        product_type=result["product_type"],
         human_review_required=result["human_review_required"],
         top_factors=result["top_factors"],
         alerts=result["alerts"],
@@ -174,10 +170,6 @@ def score_custom(features: dict, imf_id: int = 1, db: Session = Depends(get_db))
         alerts=alerts,
         confidence=result["confidence"],
         data_quality=result["data_quality"],
-        recommended_amount_min=result["recommended_amount_min"],
-        recommended_amount_max=result["recommended_amount_max"],
-        recommended_duration_months=result["recommended_duration_months"],
-        product_type=result["product_type"],
         human_review_required=result["human_review_required"],
     )
 
