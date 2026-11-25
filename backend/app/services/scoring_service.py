@@ -51,8 +51,12 @@ class ScoringService:
 
         data_quality = self._get_data_quality(features)
 
-        # Dynamic weighting: trust rules more when data quality is low
-        if data_quality < 0.5:
+        # Dynamic weighting:
+        # - Low data quality → trust rules more (0.35/0.65)
+        # - ML score looks anomalous (very low despite decent rules) → trust rules more
+        # - Normal → balanced (0.55/0.45)
+        ml_anomalous = ml_score < 200 and business_score > 400
+        if data_quality < 0.5 or ml_anomalous:
             alpha, beta = 0.35, 0.65
         else:
             alpha, beta = 0.55, 0.45
@@ -120,7 +124,7 @@ class ScoringService:
         if requested <= 5000:
             return (requested, initial_score, False)
 
-        # Walk down from requested amount to 50 000 FCFA in 5 000-FCFA steps.
+        # Walk down from requested amount to 5 000 FCFA in 5 000-FCFA steps.
         # Return the first amount where score >= SCORE_THRESHOLD.
         # If none qualifies, return the amount that produced the highest score.
         best_score = initial_score

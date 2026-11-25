@@ -205,11 +205,11 @@ class RulesService:
         if tendance > 0.15:
             raw += 10
         elif tendance > 0:
-            raw -= 5
+            raw += 3   # slight positive trend
         elif tendance > -0.1:
-            raw -= 5
+            raw -= 5   # slight negative trend
         else:
-            raw -= 15
+            raw -= 15  # strong decline
 
         # R8 — Professional integration
         if membre_groupement and jour_marche:
