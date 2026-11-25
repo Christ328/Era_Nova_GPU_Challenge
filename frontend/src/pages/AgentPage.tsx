@@ -337,14 +337,14 @@ export default function AgentPage() {
               <div className="card">
                 <h4 className="font-semibold mb-3">Conditions du prêt</h4>
                 <dl className="grid grid-cols-2 gap-2 text-sm">
-                  <dt className="text-text-secondary">Montant accordé</dt>
-                  <dd className="font-medium">{assessment.recommended_amount_max?.toLocaleString()} FCFA</dd>
+                  <dt className="text-text-secondary">Montant demandé</dt>
+                  <dd className="font-medium">{form.montant_demande?.toLocaleString()} FCFA</dd>
                   <dt className="text-text-secondary">Durée</dt>
-                  <dd className="font-medium">{assessment.recommended_duration_months} mois</dd>
+                  <dd className="font-medium">{form.duree_mois} mois</dd>
                   {assessment.teg !== undefined && (
                     <>
                       <dt className="text-text-secondary">TEG</dt>
-                      <dd className="font-medium">{assessment.teg}%</dd>
+                      <dd className="font-medium">{(assessment.teg * 100).toFixed(2)}%</dd>
                     </>
                   )}
                 </dl>
