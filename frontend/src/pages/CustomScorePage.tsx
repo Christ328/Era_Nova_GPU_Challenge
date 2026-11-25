@@ -115,7 +115,7 @@ export default function CustomScorePage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <h2 className="text-2xl font-bold">Évaluation personnalisée</h2>
         <div className="flex gap-2">
           <button onClick={handleReset} className="btn-secondary">Réinitialiser</button>
@@ -125,7 +125,7 @@ export default function CustomScorePage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {Object.entries(features).map(([key, val]) => (
           <div key={key}>
             <label className="block text-sm font-medium mb-1">

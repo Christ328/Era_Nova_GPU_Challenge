@@ -31,3 +31,7 @@
     @apply bg-primary/10 text-primary font-semibold;
   }
 }
+
+.sidebar-overlay {
+  @apply fixed inset-0 bg-black/40 z-40 md:hidden;
+}

@@ -45,7 +45,7 @@ export default function ReviewPage() {
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-2">Décision</label>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {['approve', 'modify', 'reject'].map(d => (
                 <button
                   key={d}

@@ -24,7 +24,7 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">Tableau de bord</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <KpiCard icon={Users} label="Commerçants" value="3" color="primary" />
         <KpiCard icon={CreditCard} label="Évaluations" value="0" color="gpu" />
         <KpiCard icon={AlertTriangle} label="Revues requises" value="2" color="warning" />

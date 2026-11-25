@@ -26,7 +26,7 @@ export default function GpuBenchmarkPage() {
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">Benchmark GPU</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <MetricCard label="Entraînement GPU" value={`${benchmark.gpu_time}s`} color="gpu" />
         <MetricCard label="Entraînement CPU" value={`${benchmark.cpu_time}s`} color="danger" />
         <MetricCard label="Speedup" value={`${benchmark.speedup}x`} color="success" />
