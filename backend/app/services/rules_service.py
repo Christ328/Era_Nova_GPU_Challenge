@@ -156,8 +156,6 @@ class RulesService:
             raw += 12
         elif coherence < 0.2:
             raw -= 8
-        else:
-            raw += 4
 
         # R11 — Transaction failure rate
         tx_rate = nb_echouees / max(nb_transactions, 1)
@@ -207,7 +205,7 @@ class RulesService:
         if tendance > 0.15:
             raw += 10
         elif tendance > 0:
-            raw += 3
+            raw -= 5
         elif tendance > -0.1:
             raw -= 5
         else:

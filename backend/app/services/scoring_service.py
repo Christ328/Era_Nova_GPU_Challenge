@@ -124,13 +124,16 @@ class ScoringService:
         best_score = initial_score
         best_amount = requested
 
+        # data_quality depends only on fields that do not change as montant_demande decrements;
+        # compute it once here and reuse across all iterations.
+        dq = self._get_data_quality(features)
+        a, b = (0.35, 0.65) if dq < 0.5 else (0.55, 0.45)
+
         for amount in range(requested - 5000, 4999, -5000):
             test_features = {**features, "montant_demande": amount}
             proba = model_service.predict(test_features)
             ml_s = int(round((1 - proba) * 100))
             biz_s = int(round(rules_service.compute_business_score(test_features)))
-            dq = self._get_data_quality(test_features)
-            a, b = (0.35, 0.65) if dq < 0.5 else (0.55, 0.45)
             score = int(round(a * ml_s + b * biz_s))
             score = max(0, min(100, score))
             if score >= SCORE_THRESHOLD:
