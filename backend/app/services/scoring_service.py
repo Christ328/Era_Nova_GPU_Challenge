@@ -98,7 +98,7 @@ class ScoringService:
         if initial_score >= SCORE_THRESHOLD:
             return (requested, initial_score, False)
 
-        if requested <= 50000:
+        if requested <= 5000:
             return (requested, initial_score, False)
 
         # Walk down from requested amount to 50 000 FCFA in 10 000-FCFA steps.
@@ -107,7 +107,7 @@ class ScoringService:
         best_score = initial_score
         best_amount = requested
 
-        for amount in range(requested - 10000, 49999, -10000):
+        for amount in range(requested - 5000, 4999, -5000):
             test_features = {**features, "montant_demande": amount}
             proba = model_service.predict(test_features)
             score = int(round((1 - proba) * 100))
@@ -204,9 +204,21 @@ class ScoringService:
                            factors: list) -> str:
         if not factors:
             return f"Score de {score}/100. Niveau de risque: {risk.value}."
-        top = factors[0]
-        direction = "améliore" if top["direction"] == "positive" else "réduit"
+
+        # Split top factors into positives and negatives
+        positives = [f for f in factors[:6] if f["direction"] == "positive"]
+        negatives = [f for f in factors[:6] if f["direction"] == "negative"]
+
+        parts = []
+        if positives:
+            labels = ", ".join(f["label"] for f in positives[:3])
+            parts.append(f"les facteurs favorables sont : {labels}")
+        if negatives:
+            labels = ", ".join(f["label"] for f in negatives[:3])
+            parts.append(f"les facteurs pénalisants sont : {labels}")
+
+        detail = " ; ".join(parts) if parts else ""
         return (f"Score de {score}/100 (risque {risk.value.lower()}). "
-                f"Le facteur principal ({top['label']}) {direction} le score estimé.")
+                + (f"{detail.capitalize()}." if detail else ""))
 
 scoring_service = ScoringService()
